@@ -9,23 +9,26 @@ $(NAME):
 	@echo -ne '\033[32m                            (0%)\r'
 	@sleep 0.2
 	@echo -ne '#####                      (33%)\r'
-	@pyinstaller --onefile $(NAME).py > /dev/null 2>&1
+	@pyinstaller --onefile $(NAME).py > /dev/null 2>&1 && mv dist/$(NAME) . > /dev/null 2>&1
 	@sleep 0.2
 	@echo -ne '#############              (66%)\r'
 	@sleep 0.2
 	@echo -ne '#######################   (100%)\r'
 	@echo -ne '\n'
-	@echo -e "\033[33mBuild finished"
+	@echo "\033[33mBuild finished"
 
 # Nettoyage des fichiers générés
 clean:
-	@rm -rf build dist $(NAME).spec images $(NAME) > /dev/null 2>&1
-	@echo -ne '\033[36m#######################   (100%)\r'
-	@sleep 0.2
-	@echo -ne '#############              (66%)\r'
+	@find . -type f ! -name 'Makefile' ! -name 'spider.py' -exec rm -f {} + > /dev/null 2>&1
+	@find . -type d ! -name '.' ! -name '..' -exec rm -rf {} + > /dev/null 2>&1
+	@echo "Starting clean..."
+	@echo -ne '\033[32m                            (0%)\r'
 	@sleep 0.2
 	@echo -ne '#####                      (33%)\r'
 	@sleep 0.2
-	@echo -ne '                            (0%)\r'
+	@echo -ne '#############              (66%)\r'
+	@echo -ne '#######################   (100%)\r'
+	@sleep 0.2
 	@echo -ne '\n'
 	@echo "\033[33mClean finished"
+

@@ -28,6 +28,38 @@ def get_images(url, path):
 	else:
 		print("Error getting page: ", url)
 
+def get_images_recursive(url, path, level):
+	r = requests.get(url)
+	if r.status_code == 200: # Check if the request was successful
+		content = r.text # Get the content of the page
+		images = content.split("<img")
+		# Loop through the images
+		for i in images:
+			src = i.split("src=")[1].split(" ")[0].strip("\"") # Find the source of the image
+			if src.endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
+				r = requests.get(src)
+				if r.status_code == 200:
+					# Get the content of the image
+					content = r.content
+					# Get the name of the image
+					name = src.split("/")[-1]
+					# Save the image
+					with open(os.path.join(path, name), "wb") as f:
+						f.write(content)
+				else:
+					print("Error getting image: ", src)
+	else:
+		print("Error getting page: ", url)
+
+	# Get the links
+	links = content.split("<a")
+	# Loop through the links
+	for l in links:
+		href = l.split("href=")[1].split(" ")[0].strip("\"") # Find the href of the link
+		if href.startswith("http"):
+			if level > 0:
+				get_images_recursive(href, path, level-1)
+
 
 
 def main():
@@ -46,11 +78,15 @@ def main():
 		path = args.path
 	else:
 		path = "images"
-	# Check if the path exists
-	if not os.path.exists(path):
+	if not os.path.exists(path): # Check if the path exists
 		os.makedirs(path)
-	# Get the images
-	get_images(url, path)
+	if args.recursive:
+		if args.level:
+			get_images_recursive(url, path, args.level)
+		else:
+			get_images_recursive(url, path, 1)
+	else:
+		get_images(url, path)
 
 
 main()
