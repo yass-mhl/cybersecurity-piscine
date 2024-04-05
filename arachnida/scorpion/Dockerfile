@@ -12,8 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN pip install pyinstaller
 
-RUN pyinstaller --onefile spider.py
+RUN pyinstaller --onefile scorpion.py
 
-RUN mv ./dist/spider /app
+RUN mv ./dist/scorpion /app
 
-CMD ["/spider"]
+CMD ["/scorpion"]
