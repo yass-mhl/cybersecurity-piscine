@@ -14,6 +14,8 @@ RUN pip install pyinstaller
 
 RUN pyinstaller --onefile spider.py
 
+RUN pip install flask
+
 RUN mv ./dist/spider /app
 
 CMD ["/spider"]
