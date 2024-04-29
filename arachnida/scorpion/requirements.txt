@@ -1,7 +1,0 @@
-requests
-numpy
-pandas
-matplotlib
-beautifulsoup4
-exifread
-pillow
